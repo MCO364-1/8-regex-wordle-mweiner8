@@ -1,0 +1,14 @@
+Challenges and Decisions:
+
+- Getting used to Regex and deciding which syntax to use definitely took some time, especially for the integer method (though it isn't
+    really for integers because it handles doubles as well) and wordleMatches
+- For the integer method, because there are many possibilities, I "took the easy way out" (assuming there is a hard/more official way) and just
+    put in a bunch of "or's" to test the different options
+- I also took some digging to find a suitable pattern for palindrome. (Regex101.com is very helpful.) I ended up using the "named capturing group"
+    feature because since I know how long the string is supposed to be, I can easily compare the first and last letter etc.
+- Method for wordleMatches method: My thinking was to slowly narrow the list of possible words down based on each response. I do this by looping
+    through all the responses that get sent to the methods. For each one, I do some regex check on the list of words based on if it's supposed to
+    have the letter in this place, in a different place, or not at all. I constantly update the list as well as the string checked by regex each
+    time. I can then return the list of whichever words are left. (Side note: for some reason the results I'd get in Java would be different from
+    what I'd get in regex101.com concerning how many matches it would pick up so to make it work in Java I have to check the string in a way that
+    I may get smaller strings in the results which I then have to filter out separately to not add them to the list.)
