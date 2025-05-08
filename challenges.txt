@@ -12,3 +12,4 @@ Challenges and Decisions:
     time. I can then return the list of whichever words are left. (Side note: for some reason the results I'd get in Java would be different from
     what I'd get in regex101.com concerning how many matches it would pick up so to make it work in Java I have to check the string in a way that
     I may get smaller strings in the results which I then have to filter out separately to not add them to the list.)
+- Change to wordleMatches method to check for guesses with doubled letters and only use the better one

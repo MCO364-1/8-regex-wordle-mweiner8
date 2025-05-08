@@ -120,4 +120,28 @@ class RegexMethodsTest {
         List<String> words = RegexMethods.wordleMatches(totalList);
         assertEquals("icing", words.get(0));
     }
+
+    @Test
+    void wordleMatchesWithDoubledLettersInGuess() throws IOException {
+        List<List<WordleResponse>> totalList = new ArrayList<>();
+
+        List<WordleResponse> res1 = new ArrayList<>();
+        res1.add(new WordleResponse('r', 0, LetterResponse.WRONG_LOCATION));
+        res1.add(new WordleResponse('o', 1, LetterResponse.WRONG_LETTER));
+        res1.add(new WordleResponse('o', 2, LetterResponse.CORRECT_LOCATION));
+        res1.add(new WordleResponse('m', 3, LetterResponse.WRONG_LETTER));
+        res1.add(new WordleResponse('s', 4, LetterResponse.WRONG_LETTER));
+        totalList.add(res1);
+
+        List<WordleResponse> res2 = new ArrayList<>();
+        res2.add(new WordleResponse('g', 0, LetterResponse.WRONG_LETTER));
+        res2.add(new WordleResponse('r', 1, LetterResponse.CORRECT_LOCATION));
+        res2.add(new WordleResponse('o', 2, LetterResponse.CORRECT_LOCATION));
+        res2.add(new WordleResponse('a', 3, LetterResponse.CORRECT_LOCATION));
+        res2.add(new WordleResponse('n', 4, LetterResponse.WRONG_LETTER));
+        totalList.add(res2);
+
+        List<String> words = RegexMethods.wordleMatches(totalList);
+        assertEquals("broad", words.get(0));
+    }
 }

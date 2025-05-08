@@ -1,6 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,56 +49,84 @@ public class RegexMethods {
         List<String> list = new ArrayList<>();
         int index;
         char lowerC;
+        WordleResponse wr;
+        ArrayList<Integer> skipIndex = new ArrayList<>();
+        skipIndex.add(6);
+        skipIndex.add(6);
+        skipIndex.add(6);
+        WordleResponse wrj;
+        WordleResponse wrk;
+        int counter = 0;
         for (List<WordleResponse> l : responses){
-            for (WordleResponse wr : l){
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 4; j++) {
+                    wrj = l.get(j);
+                    for (int k = j + 1; k < 5; k++) {
+                        wrk = l.get(k);
+                        if (wrj.c == wrk.c){
+                            if (wrj.resp == LetterResponse.WRONG_LETTER && (wrk.resp == LetterResponse.CORRECT_LOCATION || wrk.resp == LetterResponse.WRONG_LOCATION)){
+                                skipIndex.set(counter++, wrj.index);
+                            } else if (wrk.resp == LetterResponse.WRONG_LETTER && (wrj.resp == LetterResponse.CORRECT_LOCATION || wrj.resp == LetterResponse.WRONG_LOCATION)) {
+                                skipIndex.set(counter++, wrk.index);
+                            }
+                        }
+                    }
+                }
+                wr = l.get(i);
                 index = wr.index;
                 lowerC = Character.toLowerCase(wr.c);
                 System.out.println(lowerC);
-                if (wr.resp == LetterResponse.WRONG_LETTER) {
-                    pattern = Pattern.compile("(?!.*[a-z]*[" + lowerC + "][a-z]*).*");
-                    matcher = pattern.matcher(allWords);
-                    list.clear();
-                    while (matcher.find()){
-                        word = matcher.group();
-                        if (word.length() == 5){
-                            list.add(word);
+                if (!skipIndex.contains(i)){
+                    if (wr.resp == LetterResponse.WRONG_LETTER) {
+                        pattern = Pattern.compile("(?!.*[a-z]*[" + lowerC + "][a-z]*).*");
+                        matcher = pattern.matcher(allWords);
+                        list.clear();
+                        while (matcher.find()){
+                            word = matcher.group();
+                            if (word.length() == 5){
+                                list.add(word);
+                            }
+                        }
+                        allWords.delete(0, allWords.length());
+                        for (String s : list){
+                            allWords.append(s);
+                            allWords.append("\n");
+                        }
+                    } else if (wr.resp == LetterResponse.CORRECT_LOCATION) {
+                        pattern = Pattern.compile("(?=.*[a-z]{" + index + "}[" + lowerC + "][a-z]{" + (4 - index) + "}).*");
+                        matcher = pattern.matcher(allWords);
+                        list.clear();
+                        while (matcher.find()){
+                            word = matcher.group();
+                            if (word.length() == 5){
+                                list.add(word);
+                            }
+                        }
+                        allWords.delete(0, allWords.length());
+                        for (String s : list){
+                            allWords.append(s);
+                            allWords.append("\n");
+                        }
+                    } else {
+                        pattern = Pattern.compile("(?!.*[a-z]{" + index + "}[" + lowerC + "][a-z]{" + (4 - index) + "}).*(?=.*[a-z]*[" + lowerC + "][a-z]*).*");
+                        matcher = pattern.matcher(allWords);
+                        list.clear();
+                        while (matcher.find()){
+                            word = matcher.group();
+                            if (word.length() == 5){
+                                list.add(word);
+                            }
+                        }
+                        allWords.delete(0, allWords.length());
+                        for (String s : list){
+                            allWords.append(s);
+                            allWords.append("\n");
                         }
                     }
-                    allWords.delete(0, allWords.length());
-                    for (String s : list){
-                        allWords.append(s);
-                        allWords.append("\n");
-                    }
-                } else if (wr.resp == LetterResponse.CORRECT_LOCATION) {
-                    pattern = Pattern.compile("(?=.*[a-z]{" + index + "}[" + lowerC + "][a-z]{" + (4 - index) + "}).*");
-                    matcher = pattern.matcher(allWords);
-                    list.clear();
-                    while (matcher.find()){
-                        word = matcher.group();
-                        if (word.length() == 5){
-                            list.add(word);
-                        }
-                    }
-                    allWords.delete(0, allWords.length());
-                    for (String s : list){
-                        allWords.append(s);
-                        allWords.append("\n");
-                    }
-                } else {
-                    pattern = Pattern.compile("(?!.*[a-z]{" + index + "}[" + lowerC + "][a-z]{" + (4 - index) + "}).*(?=.*[a-z]*[" + lowerC + "][a-z]*).*");
-                    matcher = pattern.matcher(allWords);
-                    list.clear();
-                    while (matcher.find()){
-                        word = matcher.group();
-                        if (word.length() == 5){
-                            list.add(word);
-                        }
-                    }
-                    allWords.delete(0, allWords.length());
-                    for (String s : list){
-                        allWords.append(s);
-                        allWords.append("\n");
-                    }
+                    skipIndex.set(0, 6);
+                    skipIndex.set(1, 6);
+                    skipIndex.set(2, 6);
+                    counter = 0;
                 }
                 System.out.println(list);
             }
